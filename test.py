@@ -49,9 +49,6 @@ def load_epd(path):
     return positions
 
 def save_results(results):
-    with open("results.json", "w") as f:
-        json.dump(results, f, indent=2)
-
     os.makedirs("results", exist_ok=True)
     timestamp = Timestamp
     with open(f"results/{timestamp}.json", "w") as f:

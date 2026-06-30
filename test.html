@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>dorse test results</title>
+<title>Dorsetest</title>
 <style>
     body {
         font-family: sans-serif;
@@ -52,7 +52,7 @@
     <tbody id="summary-table"></tbody>
 </table>
 
-<h2>Games</h2>
+<h3 style="margin-top: 35px">Games</h3>
 <table>
     <tr><th>#</th><th>White</th><th>Black</th><th>Result</th><th>Moves</th></tr>
     <tbody id="games-table"></tbody>
@@ -60,7 +60,7 @@
 
 <!-- DORSE_RESULTS_START -->
 <script>
-const results = {"timestamp": "2026-06-30_140318", "engines": {"v1": "engines/v1/uci.py", "v2": "engines/v2/uci.py"}, "movetime": 100, "games": [{"result": "v2", "moves": 88, "white": "v1", "black": "v2", "fen": "r1bq1rk1/pppp1ppp/2nb1n2/4p3/B3P3/2N2N2/PPPP1PPP/R1BQK2R w KQ - 0 6"}, {"result": "v1", "moves": 62, "white": "v2", "black": "v1", "fen": "r1bq1rk1/pppp1ppp/2nb1n2/4p3/B3P3/2N2N2/PPPP1PPP/R1BQK2R w KQ - 0 6"}, {"result": "v1", "moves": 77, "white": "v1", "black": "v2", "fen": "r1bqk2r/1ppp1ppp/p1n2n2/2b1p3/4P3/2NP1N2/PPP1BPPP/R1BQK2R w KQkq - 0 6"}, {"result": "v2", "moves": 69, "white": "v2", "black": "v1", "fen": "r1bqk2r/1ppp1ppp/p1n2n2/2b1p3/4P3/2NP1N2/PPP1BPPP/R1BQK2R w KQkq - 0 6"}], "summary": {"v1": 2, "v2": 2, "draw": 1}};
+const results = {"timestamp": "2026-06-30_140823", "engines": {"v1": "engines/v1/uci.py", "v2": "engines/v2/uci.py"}, "movetime": 100, "games": [{"result": "draw", "moves": 200, "white": "v1", "black": "v2", "fen": "r1bq1rk1/pppp1ppp/2nb1n2/4p3/B3P3/2N2N2/PPPP1PPP/R1BQK2R w KQ - 0 6"}, {"result": "v1", "moves": 50, "white": "v2", "black": "v1", "fen": "r1bq1rk1/pppp1ppp/2nb1n2/4p3/B3P3/2N2N2/PPPP1PPP/R1BQK2R w KQ - 0 6"}, {"result": "v1", "moves": 127, "white": "v1", "black": "v2", "fen": "r1bqk2r/1ppp1ppp/p1n2n2/2b1p3/4P3/2NP1N2/PPP1BPPP/R1BQK2R w KQkq - 0 6"}, {"result": "v2", "moves": 133, "white": "v2", "black": "v1", "fen": "r1bqk2r/1ppp1ppp/p1n2n2/2b1p3/4P3/2NP1N2/PPP1BPPP/R1BQK2R w KQkq - 0 6"}, {"result": "v1", "moves": 75, "white": "v1", "black": "v2", "fen": "r1bqk2r/ppp2ppp/2np1n2/2b1p3/P3P3/2N2N1P/1PPP1PP1/R1BQKB1R w KQkq - 0 6"}, {"result": "v2", "moves": 41, "white": "v2", "black": "v1", "fen": "r1bqk2r/ppp2ppp/2np1n2/2b1p3/P3P3/2N2N1P/1PPP1PP1/R1BQKB1R w KQkq - 0 6"}, {"result": "v1", "moves": 39, "white": "v1", "black": "v2", "fen": "r1b1k2r/ppppqppp/2n2n2/2b1p3/4P3/2NP1N1P/PPP2PP1/R1BQKB1R w KQkq - 0 6"}, {"result": "v2", "moves": 39, "white": "v2", "black": "v1", "fen": "r1b1k2r/ppppqppp/2n2n2/2b1p3/4P3/2NP1N1P/PPP2PP1/R1BQKB1R w KQkq - 0 6"}, {"result": "v2", "moves": 94, "white": "v1", "black": "v2", "fen": "r1bqkb1r/1ppp1p1p/2n2np1/p3p3/4P3/2NB1N1P/PPPP1PP1/R1BQK2R w KQkq - 0 6"}, {"result": "v2", "moves": 119, "white": "v2", "black": "v1", "fen": "r1bqkb1r/1ppp1p1p/2n2np1/p3p3/4P3/2NB1N1P/PPPP1PP1/R1BQK2R w KQkq - 0 6"}, {"result": "v2", "moves": 32, "white": "v1", "black": "v2", "fen": "r1bqk2r/pppp1ppp/2n5/4p3/PbB1n3/2N2N2/1PPP1PPP/R1BQK2R w KQkq - 0 6"}, {"result": "draw", "moves": 200, "white": "v2", "black": "v1", "fen": "r1bqk2r/pppp1ppp/2n5/4p3/PbB1n3/2N2N2/1PPP1PPP/R1BQK2R w KQkq - 0 6"}, {"result": "v2", "moves": 148, "white": "v1", "black": "v2", "fen": "r1bqkb1r/1ppp1pp1/p1n2n1p/4p3/P3P3/2NP1N2/1PP2PPP/R1BQKB1R w KQkq - 0 6"}, {"result": "v2", "moves": 187, "white": "v2", "black": "v1", "fen": "r1bqkb1r/1ppp1pp1/p1n2n1p/4p3/P3P3/2NP1N2/1PP2PPP/R1BQKB1R w KQkq - 0 6"}, {"result": "v2", "moves": 22, "white": "v1", "black": "v2", "fen": "r1bqk2r/pppp1pbp/2n2np1/4p3/4P3/2N2NP1/PPPP1P1P/1RBQKB1R w Kkq - 0 6"}, {"result": "v1", "moves": 22, "white": "v2", "black": "v1", "fen": "r1bqk2r/pppp1pbp/2n2np1/4p3/4P3/2N2NP1/PPPP1P1P/1RBQKB1R w Kkq - 0 6"}, {"result": "v2", "moves": 166, "white": "v1", "black": "v2", "fen": "r1bqk2r/pppp1ppp/1bn2n2/4p3/2B1P3/2N2N2/PPPP1PPP/1RBQK2R w Kkq - 0 6"}, {"result": "v2", "moves": 49, "white": "v2", "black": "v1", "fen": "r1bqk2r/pppp1ppp/1bn2n2/4p3/2B1P3/2N2N2/PPPP1PPP/1RBQK2R w Kkq - 0 6"}, {"result": "v1", "moves": 125, "white": "v1", "black": "v2", "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/Nb2P3/3P1N2/PPP2PPP/R1BQKB1R w KQkq - 0 6"}, {"result": "draw", "moves": 200, "white": "v2", "black": "v1", "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/Nb2P3/3P1N2/PPP2PPP/R1BQKB1R w KQkq - 0 6"}], "summary": {"v1": 6, "v2": 11, "draw": 3}};
 </script>
 <!-- DORSE_RESULTS_END -->
 
