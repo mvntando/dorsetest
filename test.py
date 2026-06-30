@@ -1,12 +1,14 @@
 import subprocess
 import sys
 
-'''
-Simple Chess Engine Testing Script
-Runs the python subprocess module for the engine and uses the UCI protocol.
-Change the paths to the engine scripts if needed.
-'''
+"""
+Simple chess engine testing script.
+Runs two engines via the UCI protocol using subprocess, plays games from
+EPD positions (sides swapped), and tracks a running score.
+Update the engine paths if needed.
+"""
 
+# Engine paths
 V1 = "engines/v1/uci.py"
 V2 = "engines/v2/uci.py"
 
