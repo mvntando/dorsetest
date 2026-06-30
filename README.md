@@ -1,4 +1,4 @@
-# dorsetest
+# Dorsetest
 
 Simple testing program for comparing two versions of the dorse chess engine.
 

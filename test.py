@@ -13,10 +13,10 @@ Update the engine paths if needed.
 """
 
 # Engine paths
-V1 = "engines/v1/uci.py"
-V2 = "engines/v2/uci.py"
+V1 = {"path": "engines/v1/uci.py", "name": "v1"}
+V2 = {"path": "engines/v2/uci.py", "name": "v2"}
 
-Timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")
+Timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H%M%S")
 
 def launch_engine(path):
     return subprocess.Popen(
@@ -69,11 +69,11 @@ def save_results(results):
         f.write(html)
 
 def run_game(fen, movetime=100, swap=False):
-    v1 = launch_engine(V1)
-    v2 = launch_engine(V2)
+    v1 = launch_engine(V1["path"])
+    v2 = launch_engine(V2["path"])
 
     engines = [v2, v1] if swap else [v1, v2]
-    names = ["v2", "v1"] if swap else ["v1", "v2"]
+    names = [V2["name"], V1["name"]] if swap else [V1["name"], V2["name"]]
 
     moves = []
     current = 0  # 0 = white, 1 = black
@@ -105,7 +105,7 @@ def main():
 
     results = {
         "timestamp": Timestamp,
-        "engines": {"v1": V1, "v2": V2},
+        "engines": {"v1": V1["name"], "v2": V2["name"]},
         "movetime": 100,
         "games": [],
         "summary": score,  # same dict object, updates live as score updates
@@ -113,7 +113,7 @@ def main():
 
     for fen in positions[:10]:  # Limit to first 10 positions for testing (engines can be too slow)
         for swap in (False, True):
-            game = run_game(fen, movetime=100, swap=swap)  # movetime <100ms can cause engine to return 0000
+            game = run_game(fen, movetime=5000, swap=swap)  # movetime <100ms can cause engine to return 0000
             game["fen"] = fen
             results["games"].append(game)
 
