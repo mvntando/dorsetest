@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>dorse test results</title>
+<style>
+    body {
+        font-family: sans-serif;
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+    h1 {
+        font-size: 20px;
+    }
+    .bar-container {
+        display: flex;
+        height: 25px;
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 25px 0;
+    }
+    .bar-v1 {
+        background: #62de66;
+    }
+    .bar-v2 {
+        background: #43a2f0;
+    }
+    .bar-draw {
+        background: #c2c2c2;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    td, th {
+        text-align: left;
+        padding: 6px 10px;
+        border-bottom: 1px solid #ddd;
+    }
+</style>
+</head>
+<body>
+
+<h1>Dorsetest Results</h1>
+<p id="meta"></p>
+
+<div class="bar-container" id="bar"></div>
+
+<table>
+    <tr><th>Engine</th><th>Wins</th><th>Win %</th></tr>
+    <tbody id="summary-table"></tbody>
+</table>
+
+<h2>Games</h2>
+<table>
+    <tr><th>#</th><th>White</th><th>Black</th><th>Result</th><th>Moves</th></tr>
+    <tbody id="games-table"></tbody>
+</table>
+
+<!-- DORSE_RESULTS_START -->
+<script>
+const results = {"timestamp": "2026-06-30_140318", "engines": {"v1": "engines/v1/uci.py", "v2": "engines/v2/uci.py"}, "movetime": 100, "games": [{"result": "v2", "moves": 88, "white": "v1", "black": "v2", "fen": "r1bq1rk1/pppp1ppp/2nb1n2/4p3/B3P3/2N2N2/PPPP1PPP/R1BQK2R w KQ - 0 6"}, {"result": "v1", "moves": 62, "white": "v2", "black": "v1", "fen": "r1bq1rk1/pppp1ppp/2nb1n2/4p3/B3P3/2N2N2/PPPP1PPP/R1BQK2R w KQ - 0 6"}, {"result": "v1", "moves": 77, "white": "v1", "black": "v2", "fen": "r1bqk2r/1ppp1ppp/p1n2n2/2b1p3/4P3/2NP1N2/PPP1BPPP/R1BQK2R w KQkq - 0 6"}, {"result": "v2", "moves": 69, "white": "v2", "black": "v1", "fen": "r1bqk2r/1ppp1ppp/p1n2n2/2b1p3/4P3/2NP1N2/PPP1BPPP/R1BQK2R w KQkq - 0 6"}], "summary": {"v1": 2, "v2": 2, "draw": 1}};
+</script>
+<!-- DORSE_RESULTS_END -->
+
+<script>
+document.getElementById("meta").textContent =
+    `${results.timestamp} | movetime: ${results.movetime}ms | v1: ${results.engines.v1} | v2: ${results.engines.v2}`;
+
+const s = results.summary;
+const total = s.v1 + s.v2 + s.draw;
+
+const bar = document.getElementById("bar");
+bar.innerHTML = `
+    <div class="bar-v1" style="width:${s.v1 / total * 100}%"></div>
+    <div class="bar-draw" style="width:${s.draw / total * 100}%"></div>
+    <div class="bar-v2" style="width:${s.v2 / total * 100}%"></div>
+`;
+
+const summaryTable = document.getElementById("summary-table");
+for (const [name, wins] of Object.entries(s)) {
+    summaryTable.innerHTML += `<tr><td>${name}</td><td>${wins}</td><td>${(wins / total * 100).toFixed(1)}%</td></tr>`;
+}
+
+const gamesTable = document.getElementById("games-table");
+results.games.forEach((g, i) => {
+    gamesTable.innerHTML += `<tr><td>${i + 1}</td><td>${g.white}</td><td>${g.black}</td><td>${g.result}</td><td>${g.moves}</td></tr>`;
+});
+</script>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 # dorsetest
 
-Simple testing harness for comparing two versions of the dorse chess engine.
+Simple testing program for comparing two versions of the dorse chess engine.
 
 ## Structure
 - `v1/`, `v2/` — engine versions being compared

@@ -1,5 +1,9 @@
 import subprocess
 import sys
+import datetime
+import json
+import os
+import re
 
 """
 Simple chess engine testing script.
@@ -11,6 +15,8 @@ Update the engine paths if needed.
 # Engine paths
 V1 = "engines/v1/uci.py"
 V2 = "engines/v2/uci.py"
+
+Timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")
 
 def launch_engine(path):
     return subprocess.Popen(
@@ -42,6 +48,29 @@ def load_epd(path):
                 positions.append(" ".join(parts[:6]))  # keep only the FEN part
     return positions
 
+def save_results(results):
+    with open("results.json", "w") as f:
+        json.dump(results, f, indent=2)
+
+    os.makedirs("results", exist_ok=True)
+    timestamp = Timestamp
+    with open(f"results/{timestamp}.json", "w") as f:
+        json.dump(results, f, indent=2)
+
+    with open("test.html") as f:
+        html = f.read()
+
+    new_block = f"<!-- DORSE_RESULTS_START -->\n<script>\nconst results = {json.dumps(results)};\n</script>\n<!-- DORSE_RESULTS_END -->"
+    html = re.sub(
+        r"<!-- DORSE_RESULTS_START -->.*?<!-- DORSE_RESULTS_END -->",
+        new_block,
+        html,
+        flags=re.DOTALL,
+    )
+
+    with open("test.html", "w") as f:
+        f.write(html)
+
 def run_game(fen, movetime=100, swap=False):
     v1 = launch_engine(V1)
     v2 = launch_engine(V2)
@@ -68,20 +97,36 @@ def run_game(fen, movetime=100, swap=False):
 
     v1.terminate()
     v2.terminate()
-    
-    return winner
+
+    return {
+        "result": winner, "moves": len(moves), "white": names[0], "black": names[1],
+    }
 
 def main():
     positions = load_epd("noob5.epd")
     score = {"v1": 0, "v2": 0, "draw": 0}
 
+    results = {
+        "timestamp": Timestamp,
+        "engines": {"v1": V1, "v2": V2},
+        "movetime": 100,
+        "games": [],
+        "summary": score,  # same dict object, updates live as score updates
+    }
+
     for fen in positions[:10]:  # Limit to first 10 positions for testing (engines can be too slow)
         for swap in (False, True):
-            result = run_game(fen, movetime=100, swap=swap)  # movetime <100ms can cause engine to return 0000
-            score[result] += 1
+            game = run_game(fen, movetime=100, swap=swap)  # movetime <100ms can cause engine to return 0000
+            game["fen"] = fen
+            results["games"].append(game)
+
+            score[game["result"]] += 1
             print(f"\rv1 {score['v1']} - {score['v2']} v2 ({score['draw']} draws)", end="", flush=True)
 
     print("\n")
+
+    save_results(results)
+    return results
 
 if __name__ == "__main__":
     main()
