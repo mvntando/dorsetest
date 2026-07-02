@@ -4,12 +4,14 @@ import datetime
 import json
 import os
 import re
+import argparse
 
 """
 Simple chess engine testing script.
 Runs two engines via the UCI protocol using subprocess, plays games from
 EPD positions (sides swapped), and tracks a running score.
 Update the engine paths if needed.
+Run with or without args: python test.py --positions 5 --movetime 500
 """
 
 # Engine paths
@@ -100,20 +102,25 @@ def run_game(fen, movetime=100, swap=False):
     }
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--positions", type=int, default=1)  # Limit to first 5 positions for testing (engines can be too slow)
+    parser.add_argument("--movetime", type=int, default=5000)  # movetime <100ms can cause engine to return 0000
+    args = parser.parse_args()
+
     positions = load_epd("noob5.epd")
     score = {"v1": 0, "v2": 0, "draw": 0}
 
     results = {
         "timestamp": Timestamp,
         "engines": {"v1": V1["name"], "v2": V2["name"]},
-        "movetime": 100,
+        "movetime": args.movetime,
         "games": [],
         "summary": score,  # same dict object, updates live as score updates
     }
 
-    for fen in positions[:10]:  # Limit to first 10 positions for testing (engines can be too slow)
+    for fen in positions[:args.positions]:
         for swap in (False, True):
-            game = run_game(fen, movetime=5000, swap=swap)  # movetime <100ms can cause engine to return 0000
+            game = run_game(fen, movetime=args.movetime, swap=swap)
             game["fen"] = fen
             results["games"].append(game)
 
