@@ -1,54 +1,53 @@
-import subprocess
 import sys
+import importlib
 import datetime
 import json
 import os
 import re
 import argparse
 
+import utils  # shared, root-level, not versioned per engine
+
 """
 Simple chess engine testing script.
-Runs two engines via the UCI protocol using subprocess, plays games from
-EPD positions (sides swapped), and tracks a running score.
+Runs two engines by importing their Searcher/Position classes directly,
+plays games from EPD positions (sides swapped), and tracks a running score.
 Update the engine paths if needed.
-Run with or without args: python test.py --positions 5 --movetime 500
 """
 
-# Engine paths
-V1 = {"path": "engines/v1/uci.py", "name": "v1"}
-V2 = {"path": "engines/v2/uci.py", "name": "v2"}
+V1 = {"path": "engines/v1", "name": "v1"}
+V2 = {"path": "engines/v2", "name": "v2"}
 
 Timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H%M%S")
 
-def launch_engine(path):
-    return subprocess.Popen(
-        [sys.executable, path],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        text=True
-    )
+def load_engine(engine_dir):
+    """Load an engine's dorse/search modules by temporarily putting engine_dir
+    at the front of sys.path, so the engine's own internal imports (e.g.
+    dorse.py's `from evaluate import ...`) resolve to files in that same dir.
+    Clears any cached modules of the same name first so v1/v2 don't collide."""
+    modnames = [f[:-3] for f in os.listdir(engine_dir) if f.endswith(".py")]
 
-def send(proc, cmd):
-    proc.stdin.write(cmd + "\n")
-    proc.stdin.flush()
+    sys.path.insert(0, engine_dir)
+    try:
+        for m in modnames:
+            sys.modules.pop(m, None)  # force fresh import from this engine_dir
+        dorse = importlib.import_module("dorse")
+        search = importlib.import_module("search")
+    finally:
+        sys.path.remove(engine_dir)
 
-def read_move(proc):
-    while True:
-        line = proc.stdout.readline()
-        if line.startswith("bestmove"):
-            move = line.split()[1]
-            if move == "0000":
-                return None  # game over
-            return move
-        
+    return dorse.Position, search.Searcher
+
+
 def load_epd(path):
     positions = []
     with open(path) as f:
         for line in f:
             if line.strip():
                 parts = line.strip().split()
-                positions.append(" ".join(parts[:6]))  # keep only the FEN part
+                positions.append(" ".join(parts[:6]))
     return positions
+
 
 def save_results(results):
     os.makedirs("results", exist_ok=True)
@@ -70,41 +69,45 @@ def save_results(results):
     with open("test.html", "w") as f:
         f.write(html)
 
-def run_game(fen, movetime=100, swap=False):
-    v1 = launch_engine(V1["path"])
-    v2 = launch_engine(V2["path"])
 
-    engines = [v2, v1] if swap else [v1, v2]
+def run_game(fen, movetime, swap):
+    Pos1, Searcher1 = load_engine(V1["path"])
+    Pos2, Searcher2 = load_engine(V2["path"])
+
+    engines = [Searcher2(), Searcher1()] if swap else [Searcher1(), Searcher2()]
+    positions = [Pos2, Pos1] if swap else [Pos1, Pos2]
     names = [V2["name"], V1["name"]] if swap else [V1["name"], V2["name"]]
+
+    # Each engine may have its own Position class/board representation, thus tracking a separate position object per side
+    pos = [P(*utils.parse_fen(fen)) for P in positions]
 
     moves = []
     current = 0  # 0 = white, 1 = black
 
     for _ in range(200):
         engine = engines[current]
-        move_str = "moves " + " ".join(moves) if moves else ""
-        send(engine, f"position fen {fen} {move_str}".strip())
-        send(engine, f"go movetime {movetime}")
-        move = read_move(engine)
+        move = engine.search(pos[current], movetime=movetime / 1000.0)
         if move is None:
             winner = names[1 - current]
             break
-        moves.append(move)
+
+        move_uci = move.uci()
+        moves.append(move_uci)
+        for p in pos:
+            p.make_uci_move(move_uci)
         current ^= 1
     else:
         winner = "draw"
-
-    v1.terminate()
-    v2.terminate()
 
     return {
         "result": winner, "moves": len(moves), "white": names[0], "black": names[1],
     }
 
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--positions", type=int, default=1)  # Limit to first 5 positions for testing (engines can be too slow)
-    parser.add_argument("--movetime", type=int, default=5000)  # movetime <100ms can cause engine to return 0000
+    parser.add_argument("--positions", type=int, default=1)
+    parser.add_argument("--movetime", type=int, default=5000)
     args = parser.parse_args()
 
     positions = load_epd("noob5.epd")
@@ -115,7 +118,7 @@ def main():
         "engines": {"v1": V1["name"], "v2": V2["name"]},
         "movetime": args.movetime,
         "games": [],
-        "summary": score,  # same dict object, updates live as score updates
+        "summary": score,
     }
 
     for fen in positions[:args.positions]:
