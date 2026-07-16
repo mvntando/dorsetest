@@ -1,4 +1,3 @@
-import sys
 import importlib
 import datetime
 import json
@@ -15,31 +14,20 @@ plays games from EPD positions (sides swapped), and tracks a running score.
 Update the engine paths if needed.
 """
 
-V1 = {"path": "engines/v1", "name": "v1"}
-V2 = {"path": "engines/v2", "name": "v2"}
+V1 = {"path": "engines.v1", "name": "v1"}
+V2 = {"path": "engines.v2", "name": "v2"}
 
 Timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H%M%S")
 
-def load_engine(engine_dir):
-    """Load an engine's dorse/search modules by temporarily putting engine_dir
-    at the front of sys.path, so the engine's own internal imports (e.g.
-    dorse.py's `from evaluate import ...`) resolve to files in that same dir.
-    Clears any cached modules of the same name first so v1/v2 don't collide."""
-    modnames = [f[:-3] for f in os.listdir(engine_dir) if f.endswith(".py")]
-
-    sys.path.insert(0, engine_dir)
-    try:
-        for m in modnames:
-            sys.modules.pop(m, None)  # force fresh import from this engine_dir
-        dorse = importlib.import_module("dorse")
-        search = importlib.import_module("search")
-    finally:
-        sys.path.remove(engine_dir)
-
+def load_engine(pkg_name):
+    # Import an engine's dorse/search modules by dotted package path
+    dorse = importlib.import_module(f"{pkg_name}.dorse")
+    search = importlib.import_module(f"{pkg_name}.search")
     return dorse.Position, search.Searcher
 
 
 def load_epd(path):
+    # Read an EPD file and return a list of FEN strings (first 6 fields only).
     positions = []
     with open(path) as f:
         for line in f:
@@ -50,6 +38,8 @@ def load_epd(path):
 
 
 def save_results(results):
+    # Save results as timestamped JSON and inject them into test.html
+    # between marker comments, so the page can be viewed without a server.
     os.makedirs("results", exist_ok=True)
     timestamp = Timestamp
     with open(f"results/{timestamp}.json", "w") as f:
@@ -71,6 +61,7 @@ def save_results(results):
 
 
 def run_game(fen, movetime, swap):
+    # Play a single game between v1 and v2 from a given FEN, swapping sides
     Pos1, Searcher1 = load_engine(V1["path"])
     Pos2, Searcher2 = load_engine(V2["path"])
 
@@ -105,6 +96,7 @@ def run_game(fen, movetime, swap):
 
 
 def main():
+    # Parse args, run all games across the selected positions
     parser = argparse.ArgumentParser()
     parser.add_argument("--positions", type=int, default=1)
     parser.add_argument("--movetime", type=int, default=5000)
