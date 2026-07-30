@@ -1,0 +1,108 @@
+body {
+    font-family: sans-serif;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+    color: #222;
+}
+.bar-container {
+    display: flex;
+    height: 10px;
+    gap: 3px;
+}
+.bar-v1 {
+    border-radius: 5px 0 0 5px;
+}
+.bar-v2 {
+    border-radius: 0 5px 5px 0;
+}
+.bar-draw {
+    background: silver;
+    border-radius: 0;
+}
+.bar-v1, .bar-v2, .bar-draw {
+    color: dimgray;
+    font-size: 15px;
+    white-space: nowrap;
+}
+.color-v1 {
+    background: lime;
+}
+.color-v2 {
+    background: deepskyblue;
+}
+.bar-legend {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding: 0 5px;
+}
+.name-v1 {
+    color: lime;
+}
+.name-v2 {
+    color: deepskyblue;
+}
+.bar-percent {
+    display: flex;
+    font-size: 12px;
+    color: dimgray;
+    margin-top: 5px;
+}
+.bar-percent div {
+    text-align: center;
+}
+
+.stat-compare {
+    margin-top: 35px;
+}
+.stat-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items: center;
+    padding: 14px 0;
+}
+.stat-row .stat-name {
+    text-align: center;
+}
+.stat-value {
+    text-align: center;
+}
+.stat-pill {
+    display: inline-block;
+    min-width: 20px;
+    padding: 2px 5px;
+    border-radius: 15px;
+    color: white;
+    font-weight: bold;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+td, th {
+    text-align: left;
+    padding: 8px 14px;
+    border-bottom: 1px solid #ddd;
+}
+td:last-child, th:last-child {
+    width: 1%;
+    white-space: nowrap;
+}
+tbody tr:nth-child(even) {
+    background: #f7f7f7;
+}
+.copy-icon {
+    opacity: 0;
+    cursor: pointer;
+    vertical-align: middle;
+}
+tbody tr:hover .copy-icon {
+    opacity: 0.6;
+}
+.copy-icon:hover {
+    opacity: 1 !important;
+}

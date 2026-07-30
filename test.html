@@ -1,117 +1,138 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Dorsetest</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23000' class='size-6'><path stroke-linecap='round' stroke-linejoin='round' d='M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5' /></svg>">
-
-<style>
-    body {
-        font-family: sans-serif;
-        max-width: 800px;
-        margin: 40px auto;
-        padding: 0 20px;
-    }
-    .bar-container {
-        display: flex;
-        height: 20px;
-        border-radius: 10px;
-        overflow: hidden;
-        margin: 0 0 20px 0;
-    }
-    .bar-labels {
-        display: flex;
-        justify-content: space-between;
-        margin: 30px 10px 10px 10px;
-        font-size: 15px;
-        font-weight: bold;
-        ::first-letter {
-            text-transform: uppercase;
-        }
-    }
-    .bar-v1 {
-        background: lime;
-    }
-    .bar-v2 {
-        background: deepskyblue;
-    }
-    .bar-draw {
-        background: silver;
-    }
-    .bar-v1, .bar-v2, .bar-draw {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: dimgray;
-        font-size: 15px;
-        white-space: nowrap;
-    }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    td, th {
-        text-align: left;
-        padding: 6px 10px;
-        border-bottom: 1px solid #ddd;
-    }
-</style>
+<link rel="stylesheet" href="test.css">
 </head>
 <body>
 
+<!-- Main page -->
 <h2>Dorsetest Results</h2>
 <p id="meta"></p>
 
-<div class="bar-labels">
-    <span class="v1-label" id="v1-name">v1</span>
-    <span class="draw-label">draw</span>
-    <span class="v2-label" id="v2-name">v2</span>
-</div>
+<div style="margin-top: 35px">
+<div class="bar-legend" id="bar-legend"></div>
 <div class="bar-container" id="bar"></div>
+<div class="bar-percent" id="bar-percent"></div>
+</div>
 
-<table>
-    <tr><th>Engine</th><th>Wins</th><th>Win %</th></tr>
-    <tbody id="summary-table"></tbody>
-</table>
+<div class="stat-compare" id="stat-compare"></div>
 
 <h3 style="margin-top: 35px">Games</h3>
 <table>
-    <tr><th>#</th><th>White</th><th>Black</th><th>Result</th><th>Moves</th></tr>
+    <tr><th>No_</th><th>White</th><th>Black</th><th>Result</th><th>Moves</th><th></th></tr>
     <tbody id="games-table"></tbody>
 </table>
 
 <!-- DORSE_RESULTS_START -->
 <script>
-const results = {"timestamp": "2026-06-30-140823", "engines": {"v1": "v1", "v2": "v2"}, "movetime": 100, "games": [{"result": "draw", "moves": 200, "white": "v1", "black": "v2", "fen": "r1bq1rk1/pppp1ppp/2nb1n2/4p3/B3P3/2N2N2/PPPP1PPP/R1BQK2R w KQ - 0 6"}, {"result": "v1", "moves": 50, "white": "v2", "black": "v1", "fen": "r1bq1rk1/pppp1ppp/2nb1n2/4p3/B3P3/2N2N2/PPPP1PPP/R1BQK2R w KQ - 0 6"}, {"result": "v1", "moves": 127, "white": "v1", "black": "v2", "fen": "r1bqk2r/1ppp1ppp/p1n2n2/2b1p3/4P3/2NP1N2/PPP1BPPP/R1BQK2R w KQkq - 0 6"}, {"result": "v2", "moves": 133, "white": "v2", "black": "v1", "fen": "r1bqk2r/1ppp1ppp/p1n2n2/2b1p3/4P3/2NP1N2/PPP1BPPP/R1BQK2R w KQkq - 0 6"}, {"result": "v1", "moves": 75, "white": "v1", "black": "v2", "fen": "r1bqk2r/ppp2ppp/2np1n2/2b1p3/P3P3/2N2N1P/1PPP1PP1/R1BQKB1R w KQkq - 0 6"}, {"result": "v2", "moves": 41, "white": "v2", "black": "v1", "fen": "r1bqk2r/ppp2ppp/2np1n2/2b1p3/P3P3/2N2N1P/1PPP1PP1/R1BQKB1R w KQkq - 0 6"}, {"result": "v1", "moves": 39, "white": "v1", "black": "v2", "fen": "r1b1k2r/ppppqppp/2n2n2/2b1p3/4P3/2NP1N1P/PPP2PP1/R1BQKB1R w KQkq - 0 6"}, {"result": "v2", "moves": 39, "white": "v2", "black": "v1", "fen": "r1b1k2r/ppppqppp/2n2n2/2b1p3/4P3/2NP1N1P/PPP2PP1/R1BQKB1R w KQkq - 0 6"}, {"result": "v2", "moves": 94, "white": "v1", "black": "v2", "fen": "r1bqkb1r/1ppp1p1p/2n2np1/p3p3/4P3/2NB1N1P/PPPP1PP1/R1BQK2R w KQkq - 0 6"}, {"result": "v2", "moves": 119, "white": "v2", "black": "v1", "fen": "r1bqkb1r/1ppp1p1p/2n2np1/p3p3/4P3/2NB1N1P/PPPP1PP1/R1BQK2R w KQkq - 0 6"}, {"result": "v2", "moves": 32, "white": "v1", "black": "v2", "fen": "r1bqk2r/pppp1ppp/2n5/4p3/PbB1n3/2N2N2/1PPP1PPP/R1BQK2R w KQkq - 0 6"}, {"result": "draw", "moves": 200, "white": "v2", "black": "v1", "fen": "r1bqk2r/pppp1ppp/2n5/4p3/PbB1n3/2N2N2/1PPP1PPP/R1BQK2R w KQkq - 0 6"}, {"result": "v2", "moves": 148, "white": "v1", "black": "v2", "fen": "r1bqkb1r/1ppp1pp1/p1n2n1p/4p3/P3P3/2NP1N2/1PP2PPP/R1BQKB1R w KQkq - 0 6"}, {"result": "v2", "moves": 187, "white": "v2", "black": "v1", "fen": "r1bqkb1r/1ppp1pp1/p1n2n1p/4p3/P3P3/2NP1N2/1PP2PPP/R1BQKB1R w KQkq - 0 6"}, {"result": "v2", "moves": 22, "white": "v1", "black": "v2", "fen": "r1bqk2r/pppp1pbp/2n2np1/4p3/4P3/2N2NP1/PPPP1P1P/1RBQKB1R w Kkq - 0 6"}, {"result": "v1", "moves": 22, "white": "v2", "black": "v1", "fen": "r1bqk2r/pppp1pbp/2n2np1/4p3/4P3/2N2NP1/PPPP1P1P/1RBQKB1R w Kkq - 0 6"}, {"result": "v2", "moves": 166, "white": "v1", "black": "v2", "fen": "r1bqk2r/pppp1ppp/1bn2n2/4p3/2B1P3/2N2N2/PPPP1PPP/1RBQK2R w Kkq - 0 6"}, {"result": "v2", "moves": 49, "white": "v2", "black": "v1", "fen": "r1bqk2r/pppp1ppp/1bn2n2/4p3/2B1P3/2N2N2/PPPP1PPP/1RBQK2R w Kkq - 0 6"}, {"result": "v1", "moves": 125, "white": "v1", "black": "v2", "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/Nb2P3/3P1N2/PPP2PPP/R1BQKB1R w KQkq - 0 6"}, {"result": "draw", "moves": 200, "white": "v2", "black": "v1", "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/Nb2P3/3P1N2/PPP2PPP/R1BQKB1R w KQkq - 0 6"}], "summary": {"v1": 6, "v2": 11, "draw": 3}};
+const results = {
+    "timestamp": "2026-07-16-173131",
+    "engines": {"v1": "V1", "v2": "V2"},
+    "movetime": 5000,
+    "summary": {"v1": 1, "v2": 4, "draw": 1},
+    "stats": {
+        "v1": {"avgNps": 812, "maxDepth": 22, "avgNodes": 3450},
+        "v2": {"avgNps": 1050, "maxDepth": 19, "avgNodes": 4980}
+    },
+    "games": [
+        {"result": "v1", "moves": 31, "white": "v1", "black": "v2", "fen": "r1bq1rk1/pppp1ppp/2nb1n2/4p3/B3P3/2N2N2/PPPP1PPP/R1BQK2R w KQ - 0 6"},
+        {"result": "draw", "moves": 200, "white": "v2", "black": "v1", "fen": "r1bq1rk1/pppp1ppp/2nb1n2/4p3/B3P3/2N2N2/PPPP1PPP/R1BQK2R w KQ - 0 6"}
+    ]
+};
 </script>
 <!-- DORSE_RESULTS_END -->
 
 <script>
 document.getElementById("meta").innerHTML =
-    `Date: ${results.timestamp}<br><br>Movetime:${results.movetime}ms`;
+    `Date: ${results.timestamp}<br><br>Movetime: ${results.movetime}ms`;
 
 const s = results.summary;
 const total = s.v1 + s.v2 + s.draw;
 
-document.getElementById("v1-name").textContent = results.engines.v1;
-document.getElementById("v2-name").textContent = results.engines.v2;
-
-const bar = document.getElementById("bar");
-bar.innerHTML = `
-    <div class="bar-v1" style="width:${s.v1 / total * 100}%">${(s.v1 / total * 100).toFixed(0)}%</div>
-    <div class="bar-draw" style="width:${s.draw / total * 100}%">${(s.draw / total * 100).toFixed(0)}%</div>
-    <div class="bar-v2" style="width:${s.v2 / total * 100}%">${(s.v2 / total * 100).toFixed(0)}%</div>
+// engine name legend above the bar, colored to match each engine's pill color
+const barLegend = document.getElementById("bar-legend");
+barLegend.innerHTML = `
+    <span class="name-v1">${results.engines.v1}</span>
+    <span class="name-v2">${results.engines.v2}</span>
 `;
 
-const summaryTable = document.getElementById("summary-table");
-for (const [name, wins] of Object.entries(s)) {
-    summaryTable.innerHTML += `<tr><td>${name}</td><td>${wins}</td><td>${(wins / total * 100).toFixed(1)}%</td></tr>`;
+// bar graph showing the percentage of wins for each engine and draws
+const bar = document.getElementById("bar");
+bar.innerHTML = `
+    <div class="bar-v1 color-v1" style="width:${s.v1 / total * 100}%"></div>
+    <div class="bar-draw" style="width:${s.draw / total * 100}%"></div>
+    <div class="bar-v2 color-v2" style="width:${s.v2 / total * 100}%"></div>
+`;
+
+// bar percentage labels
+const barPercent = document.getElementById("bar-percent");
+barPercent.innerHTML = `
+    <div style="width:${s.v1 / total * 100}%">${Math.round(s.v1 / total * 100)}%</div>
+    <div style="width:${s.draw / total * 100}%">${Math.round(s.draw / total * 100)}%</div>
+    <div style="width:${s.v2 / total * 100}%">${Math.round(s.v2 / total * 100)}%</div>
+`;
+
+// formats large numbers as "812k" style; leaves small numbers (like depth) untouched
+function formatK(v) {
+    return v >= 1000 ? Math.round(v / 1000) + "k" : v;
 }
+
+// match-wide stat comparison, pill highlights for side that leads
+const statCompare = document.getElementById("stat-compare");
+const statDefs = [
+    { key: "wins", label: "Wins", format: v => v },
+    { key: "avgNps", label: "Avg NPS", format: formatK },
+    { key: "maxDepth", label: "Max Depth Reached", format: v => v },
+    { key: "avgNodes", label: "Avg Nodes / Move", format: formatK },
+];
+
+statCompare.innerHTML = `
+    <div class="stat-row">
+        <div class="stat-value name-v1">${results.engines.v1.toUpperCase()}</div>
+        <div class="stat-name">MATCH STATS</div>
+        <div class="stat-value name-v2">${results.engines.v2.toUpperCase()}</div>
+    </div>
+`;
+
+// renders a value as a colored pill if it's the leader for that row, plain text otherwise
+function statCell(value, format, isLeader, pillClass) {
+    const text = format(value);
+    return isLeader
+        ? `<span class="stat-pill ${pillClass}">${text}</span>`
+        : `<span>${text}</span>`;
+}
+
+// inverts results.stats to be keyed by stat name instead of engine
+const statSource = { wins: { v1: s.v1, v2: s.v2 } };
+for (const key of Object.keys(results.stats.v1)) {
+    statSource[key] = { v1: results.stats.v1[key], v2: results.stats.v2[key] };
+}
+
+statDefs.forEach(def => {
+    const v1val = statSource[def.key].v1;
+    const v2val = statSource[def.key].v2;
+    const v1leads = v1val > v2val;
+    const v2leads = v2val > v1val;
+
+    statCompare.innerHTML += `
+        <div class="stat-row">
+            <div class="stat-value">${statCell(v1val, def.format, v1leads, "color-v1")}</div>
+            <div class="stat-name">${def.label}</div>
+            <div class="stat-value">${statCell(v2val, def.format, v2leads, "color-v2")}</div>
+        </div>
+    `;
+});
 
 const gamesTable = document.getElementById("games-table");
 results.games.forEach((g, i) => {
-    gamesTable.innerHTML += `<tr><td>${i + 1}</td><td>${g.white}</td><td>${g.black}</td><td>${g.result}</td><td>${g.moves}</td></tr>`;
+    gamesTable.innerHTML += `<tr><td>${i + 1}</td><td>${g.white}</td><td>${g.black}</td><td>${g.result}</td><td>${g.moves}</td><td>
+        <svg class="copy-icon" data-fen="${g.fen}" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+    </td></tr>`;
 });
+
 </script>
 
 </body>
