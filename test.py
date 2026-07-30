@@ -1,4 +1,5 @@
 import importlib
+import time
 import datetime
 import json
 import os
@@ -73,11 +74,18 @@ def run_game(fen, movetime, swap):
     pos = [P(*utils.parse_fen(fen)) for P in positions]
 
     moves = []
+    move_stats = []
     current = 0  # 0 = white, 1 = black
 
     for _ in range(200):
         engine = engines[current]
         move = engine.search(pos[current], movetime=movetime / 1000.0)
+
+        elapsed = time.perf_counter() - engine.start_time
+        move_stats.append({
+            "engine": names[current], "nodes": engine.nodes, "depth": engine.depth, "elapsed": elapsed,
+        })
+
         if move is None:
             winner = names[1 - current]
             break
@@ -90,9 +98,10 @@ def run_game(fen, movetime, swap):
     else:
         winner = "draw"
 
-    return {
+    game = {
         "result": winner, "moves": len(moves), "white": names[0], "black": names[1],
     }
+    return game, move_stats
 
 
 def main():
@@ -104,6 +113,8 @@ def main():
 
     positions = load_epd("noob5.epd")
     score = {"v1": 0, "v2": 0, "draw": 0}
+    stat_totals = {"v1": {"nodes": 0, "elapsed": 0.0, "count": 0, "maxDepth": 0},
+                   "v2": {"nodes": 0, "elapsed": 0.0, "count": 0, "maxDepth": 0}}
 
     results = {
         "timestamp": Timestamp,
@@ -115,14 +126,30 @@ def main():
 
     for fen in positions[:args.positions]:
         for swap in (False, True):
-            game = run_game(fen, movetime=args.movetime, swap=swap)
+            game, move_stats = run_game(fen, movetime=args.movetime, swap=swap)
             game["fen"] = fen
             results["games"].append(game)
+
+            for m in move_stats:
+                t = stat_totals[m["engine"]]
+                t["nodes"] += m["nodes"]
+                t["elapsed"] += m["elapsed"]
+                t["count"] += 1
+                t["maxDepth"] = max(t["maxDepth"], m["depth"])
 
             score[game["result"]] += 1
             print(f"\rv1 {score['v1']} - {score['v2']} v2 ({score['draw']} draws)", end="", flush=True)
 
     print("\n")
+
+    results["stats"] = {
+        name: {
+            "avgNps": int(t["nodes"] / t["elapsed"]) if t["elapsed"] > 0 else 0,
+            "maxDepth": t["maxDepth"],
+            "avgNodes": int(t["nodes"] / t["count"]) if t["count"] else 0,
+        }
+        for name, t in stat_totals.items()
+    }
 
     save_results(results)
     return results
