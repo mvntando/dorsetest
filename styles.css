@@ -106,3 +106,15 @@ tbody tr:hover .copy-icon {
 .copy-icon:hover {
     opacity: 1 !important;
 }
+.copy-icon .icon-copy {
+    display: block;
+}
+.copy-icon .icon-check {
+    display: none;
+}
+.copy-icon.copied .icon-copy {
+    display: none;
+}
+.copy-icon.copied .icon-check {
+    display: block;
+}

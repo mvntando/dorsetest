@@ -1,139 +1,142 @@
 <!DOCTYPE html>
 <html>
-<head>
-<link rel="stylesheet" href="test.css">
-</head>
-<body>
+  <head>
+    <title>Dorsetest</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  </head>
+  <body>
+    <!-- Main page -->
+    <h2>Dorsetest Results</h2>
+    <p id="meta"></p>
 
-<!-- Main page -->
-<h2>Dorsetest Results</h2>
-<p id="meta"></p>
+    <div style="margin-top: 35px">
+      <div class="bar-legend" id="bar-legend"></div>
+      <div class="bar-container" id="bar"></div>
+      <div class="bar-percent" id="bar-percent"></div>
+    </div>
 
-<div style="margin-top: 35px">
-<div class="bar-legend" id="bar-legend"></div>
-<div class="bar-container" id="bar"></div>
-<div class="bar-percent" id="bar-percent"></div>
-</div>
+    <div class="stat-compare" id="stat-compare"></div>
 
-<div class="stat-compare" id="stat-compare"></div>
+    <h3 style="margin-top: 35px">Games</h3>
+    <table>
+      <tr><th>No_</th><th>White</th><th>Black</th><th>Result</th><th>Moves</th><th></th></tr>
+      <tbody id="games-table"></tbody>
+    </table>
 
-<h3 style="margin-top: 35px">Games</h3>
-<table>
-    <tr><th>No_</th><th>White</th><th>Black</th><th>Result</th><th>Moves</th><th></th></tr>
-    <tbody id="games-table"></tbody>
-</table>
-
-<!-- DORSE_RESULTS_START -->
+    <!-- DORSE_RESULTS_START -->
 <script>
-const results = {
-    "timestamp": "2026-07-16-173131",
-    "engines": {"v1": "V1", "v2": "V2"},
-    "movetime": 5000,
-    "summary": {"v1": 1, "v2": 4, "draw": 1},
-    "stats": {
-        "v1": {"avgNps": 812, "maxDepth": 22, "avgNodes": 3450},
-        "v2": {"avgNps": 1050, "maxDepth": 19, "avgNodes": 4980}
-    },
-    "games": [
-        {"result": "v1", "moves": 31, "white": "v1", "black": "v2", "fen": "r1bq1rk1/pppp1ppp/2nb1n2/4p3/B3P3/2N2N2/PPPP1PPP/R1BQK2R w KQ - 0 6"},
-        {"result": "draw", "moves": 200, "white": "v2", "black": "v1", "fen": "r1bq1rk1/pppp1ppp/2nb1n2/4p3/B3P3/2N2N2/PPPP1PPP/R1BQK2R w KQ - 0 6"}
-    ]
-};
+const results = {"timestamp": "2026-07-31-114903", "engines": {"v1": "v1", "v2": "v2"}, "movetime": 200, "summary": {"v1": 2, "v2": 0, "draw": 0}, "stats": {"v1": {"avgNps": 35418, "maxDepth": 5, "avgNodes": 7087}, "v2": {"avgNps": 28812, "maxDepth": 7, "avgNodes": 5660}}, "games": [{"result": "v1", "white": "v1", "black": "v2", "moves": 105, "moves_uci": "e1g1 c6d4 d2d3 h7h6 c3b5 d4b5 a4b5 c7c6 b5c4 b7b5 c4b3 c8b7 c1d2 f8e8 d1e2 b5b4 a1d1 d8c7 c2c3 c6c5 c3b4 c5b4 d2e3 f6g4 h2h3 g4e3 e2e3 d6c5 e3e2 a8d8 f1e1 d7d6 e2c2 a7a6 d3d4 e5d4 f3d4 d6d5 e4d5 e8e1 d1e1 b7d5 b3d5 d8d5 e1e8 c5f8 c2c7 d5d4 e8f8 g8f8 c7c5 f8g8 c5d4 a6a5 d4d8 g8h7 d8a5 f7f6 a5b4 h7g8 b4b8 g8h7 a2a3 g7g5 b8f8 h7g6 f8g8 g6f5 g8d5 f5g6 d5g8 g6f5 f2f3 f5f4 g8e6 f6f5 e6h6 f4e3 h3h4 e3d3 h4g5 d3d2 h6f6 d2c2 b2b4 c2b3 f6f5 b3a3 f5f7 a3b4 g1h1 b4c3 g5g6 c3c2 g6g7 c2c3 g7g8q c3d3 h1g1 d3e3 f7d7 e3f4 d7d6 f4f5 g2g4", "fen": "r1bq1rk1/pppp1ppp/2nb1n2/4p3/B3P3/2N2N2/PPPP1PPP/R1BQK2R w KQ - 0 6"}, {"result": "v1", "white": "v2", "black": "v1", "moves": 88, "moves_uci": "e1g1 c6d4 d2d3 c7c5 c3b5 d4b5 a4b5 a7a6 b5c4 d8b6 c4b3 h7h6 c1e3 f8d8 c2c4 d6c7 f1e1 d7d6 h2h3 c8e6 d1c2 a8c8 a1d1 e6d7 a2a3 d7c6 g2g3 g7g5 e3d2 g5g4 h3g4 f6g4 d2c3 f7f5 a3a4 f5f4 a4a5 b6a7 g3f4 e5f4 d3d4 a7b8 d4d5 c6d7 c2c1 d8f8 f3h4 g4e5 c3e5 d6e5 h4g6 d7g4 g6f8 c8f8 f2f3 g4f3 d1d3 f3g4 c1d2 b8d8 d2g2 h6h5 d3h3 f4f3 g2f2 g4h3 e1d1 d8g5 g1h2 g5g2 f2g2 h3g2 d5d6 c7a5 d1d5 f3f2 d5d1 a5e1 d6d7 f2f1q d1e1 f1e1 h2g2 f8f2 g2g3 e1e3 g3h4 f2h2", "fen": "r1bq1rk1/pppp1ppp/2nb1n2/4p3/B3P3/2N2N2/PPPP1PPP/R1BQK2R w KQ - 0 6"}]};
 </script>
 <!-- DORSE_RESULTS_END -->
 
-<script>
-document.getElementById("meta").innerHTML =
-    `Date: ${results.timestamp}<br><br>Movetime: ${results.movetime}ms`;
+    <script>
+    document.getElementById("meta").innerHTML =
+      `Date: ${results.timestamp}<br><br>Movetime: ${results.movetime}ms`;
 
-const s = results.summary;
-const total = s.v1 + s.v2 + s.draw;
+    const s = results.summary;
+    const total = s.v1 + s.v2 + s.draw;
 
-// engine name legend above the bar, colored to match each engine's pill color
-const barLegend = document.getElementById("bar-legend");
-barLegend.innerHTML = `
-    <span class="name-v1">${results.engines.v1}</span>
-    <span class="name-v2">${results.engines.v2}</span>
-`;
+    // engine name legend above the bar, colored to match each engine's pill color
+    const barLegend = document.getElementById("bar-legend");
+    barLegend.innerHTML = `
+      <span class="name-v1">${results.engines.v1}</span>
+      <span class="name-v2">${results.engines.v2}</span>
+    `;
 
-// bar graph showing the percentage of wins for each engine and draws
-const bar = document.getElementById("bar");
-bar.innerHTML = `
-    <div class="bar-v1 color-v1" style="width:${s.v1 / total * 100}%"></div>
-    <div class="bar-draw" style="width:${s.draw / total * 100}%"></div>
-    <div class="bar-v2 color-v2" style="width:${s.v2 / total * 100}%"></div>
-`;
+    // bar graph showing the percentage of wins for each engine and draws
+    const bar = document.getElementById("bar");
+    bar.innerHTML = `
+      <div class="bar-v1 color-v1" style="width:${s.v1 / total * 100}%"></div>
+      <div class="bar-draw" style="width:${s.draw / total * 100}%"></div>
+      <div class="bar-v2 color-v2" style="width:${s.v2 / total * 100}%"></div>
+    `;
 
-// bar percentage labels
-const barPercent = document.getElementById("bar-percent");
-barPercent.innerHTML = `
-    <div style="width:${s.v1 / total * 100}%">${Math.round(s.v1 / total * 100)}%</div>
-    <div style="width:${s.draw / total * 100}%">${Math.round(s.draw / total * 100)}%</div>
-    <div style="width:${s.v2 / total * 100}%">${Math.round(s.v2 / total * 100)}%</div>
-`;
+    // bar percentage labels
+    const barPercent = document.getElementById("bar-percent");
+    barPercent.innerHTML = `
+      <div style="width:${s.v1 / total * 100}%">${Math.round(s.v1 / total * 100)}%</div>
+      <div style="width:${s.draw / total * 100}%">${Math.round(s.draw / total * 100)}%</div>
+      <div style="width:${s.v2 / total * 100}%">${Math.round(s.v2 / total * 100)}%</div>
+    `;
 
-// formats large numbers as "812k" style; leaves small numbers (like depth) untouched
-function formatK(v) {
-    return v >= 1000 ? Math.round(v / 1000) + "k" : v;
-}
+    // formats large numbers as "812k" style; leaves small numbers (like depth) untouched
+    function formatK(v) {
+      return v >= 1000 ? Math.round(v / 1000) + "k" : v;
+    }
 
-// match-wide stat comparison, pill highlights for side that leads
-const statCompare = document.getElementById("stat-compare");
-const statDefs = [
-    { key: "wins", label: "Wins", format: v => v },
-    { key: "avgNps", label: "Avg NPS", format: formatK },
-    { key: "maxDepth", label: "Max Depth Reached", format: v => v },
-    { key: "avgNodes", label: "Avg Nodes / Move", format: formatK },
-];
+    // match-wide stat comparison, pill highlights for side that leads
+    const statCompare = document.getElementById("stat-compare");
+    const statDefs = [
+      { key: "wins", label: "Wins", format: v => v },
+      { key: "avgNps", label: "Avg NPS", format: formatK },
+      { key: "maxDepth", label: "Max Depth Reached", format: v => v },
+      { key: "avgNodes", label: "Avg Nodes / Move", format: formatK },
+    ];
 
-statCompare.innerHTML = `
-    <div class="stat-row">
+    statCompare.innerHTML = `
+      <div class="stat-row">
         <div class="stat-value name-v1">${results.engines.v1.toUpperCase()}</div>
         <div class="stat-name">MATCH STATS</div>
         <div class="stat-value name-v2">${results.engines.v2.toUpperCase()}</div>
-    </div>
-`;
+      </div>
+    `;
 
-// renders a value as a colored pill if it's the leader for that row, plain text otherwise
-function statCell(value, format, isLeader, pillClass) {
-    const text = format(value);
-    return isLeader
+    // renders a value as a colored pill if it's the leader for that row, plain text otherwise
+    function statCell(value, format, isLeader, pillClass) {
+      const text = format(value);
+      return isLeader
         ? `<span class="stat-pill ${pillClass}">${text}</span>`
         : `<span>${text}</span>`;
-}
+    }
 
-// inverts results.stats to be keyed by stat name instead of engine
-const statSource = { wins: { v1: s.v1, v2: s.v2 } };
-for (const key of Object.keys(results.stats.v1)) {
-    statSource[key] = { v1: results.stats.v1[key], v2: results.stats.v2[key] };
-}
+    // inverts results.stats to be keyed by stat name instead of engine
+    const statSource = { wins: { v1: s.v1, v2: s.v2 } };
+    for (const key of Object.keys(results.stats.v1)) {
+      statSource[key] = { v1: results.stats.v1[key], v2: results.stats.v2[key] };
+    }
 
-statDefs.forEach(def => {
-    const v1val = statSource[def.key].v1;
-    const v2val = statSource[def.key].v2;
-    const v1leads = v1val > v2val;
-    const v2leads = v2val > v1val;
+    statDefs.forEach(def => {
+      const v1val = statSource[def.key].v1;
+      const v2val = statSource[def.key].v2;
+      const v1leads = v1val > v2val;
+      const v2leads = v2val > v1val;
 
-    statCompare.innerHTML += `
+      statCompare.innerHTML += `
         <div class="stat-row">
-            <div class="stat-value">${statCell(v1val, def.format, v1leads, "color-v1")}</div>
-            <div class="stat-name">${def.label}</div>
-            <div class="stat-value">${statCell(v2val, def.format, v2leads, "color-v2")}</div>
+          <div class="stat-value">${statCell(v1val, def.format, v1leads, "color-v1")}</div>
+          <div class="stat-name">${def.label}</div>
+          <div class="stat-value">${statCell(v2val, def.format, v2leads, "color-v2")}</div>
         </div>
-    `;
-});
+      `;
+    });
 
-const gamesTable = document.getElementById("games-table");
-results.games.forEach((g, i) => {
-    gamesTable.innerHTML += `<tr><td>${i + 1}</td><td>${g.white}</td><td>${g.black}</td><td>${g.result}</td><td>${g.moves}</td><td>
-        <svg class="copy-icon" data-fen="${g.fen}" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    const gamesTable = document.getElementById("games-table");
+    results.games.forEach((g, i) => {
+      const fullPosition = g.moves_uci
+        ? `fen ${g.fen} moves ${g.moves_uci}`
+        : `fen ${g.fen}`;
+
+      gamesTable.innerHTML += `<tr><td>${i + 1}</td><td>${g.white}</td><td>${g.black}</td><td>${g.result}</td><td>${g.moves}</td><td>
+        <svg class="copy-icon" data-copy="${fullPosition}" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <g class="icon-copy">
             <rect x="9" y="9" width="13" height="13" rx="2"/>
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </g>
+          <path class="icon-check" d="M20 6L9 17l-5-5"/>
         </svg>
-    </td></tr>`;
-});
+      </td></tr>`;
+    });
 
-</script>
+    document.getElementById("games-table").addEventListener("click", (e) => {
+      const icon = e.target.closest(".copy-icon");
+      if (!icon) return;
 
-</body>
+      navigator.clipboard.writeText(icon.dataset.copy).then(() => {
+        icon.classList.add("copied");
+        setTimeout(() => icon.classList.remove("copied"), 1000);
+      });
+    });
+    </script>
+  </body>
 </html>

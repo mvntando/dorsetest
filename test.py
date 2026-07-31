@@ -99,7 +99,7 @@ def run_game(fen, movetime, swap):
         winner = "draw"
 
     game = {
-        "result": winner, "moves": len(moves), "white": names[0], "black": names[1],
+        "result": winner, "white": names[0], "black": names[1], "moves": len(moves), "moves_uci": " ".join(moves),
     }
     return game, move_stats
 
@@ -120,8 +120,9 @@ def main():
         "timestamp": Timestamp,
         "engines": {"v1": V1["name"], "v2": V2["name"]},
         "movetime": args.movetime,
-        "games": [],
         "summary": score,
+        "stats": {},
+        "games": [],
     }
 
     for fen in positions[:args.positions]:
