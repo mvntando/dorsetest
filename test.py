@@ -75,7 +75,7 @@ def run_game(fen, movetime, swap):
 
     moves = []
     move_stats = []
-    current = 0  # 0 = white, 1 = black
+    current = 0 if fen.split()[1] == "w" else 1
 
     for _ in range(200):
         engine = engines[current]
