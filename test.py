@@ -76,6 +76,8 @@ def run_game(fen, movetime, swap):
     moves = []
     move_stats = []
     current = 0 if fen.split()[1] == "w" else 1
+    seen_positions = {}
+    halfmove_clock = 0
 
     for _ in range(200):
         engine = engines[current]
@@ -91,7 +93,7 @@ def run_game(fen, movetime, swap):
             in_check_a = pos[current].in_check(pos[current].sd)
             in_check_b = pos[current^1].in_check(pos[current].sd)
             if in_check_a != in_check_b:
-                print(f"warning: engines disagreed on check status at move {len(moves)}")
+                print(f"warning: in_check mismatch between engines at move {len(moves)}")
 
             if in_check_a:
                 winner = names[1 - current]  # checkmate
@@ -103,6 +105,25 @@ def run_game(fen, movetime, swap):
         moves.append(move_uci)
         for p in pos:
             p.make_uci_move(move_uci)
+
+        if move.piece == utils.PAWN or move.captured != utils.EMPTY:
+            halfmove_clock = 0
+        else:
+            halfmove_clock += 1
+
+        if halfmove_clock >= 100:  # 50 full moves with no pawn push/capture
+            winner = "draw"
+            break
+
+        h0, h1 = pos[0].hash, pos[1].hash
+        if h0 != h1:
+            print(f"warning: hash mismatch between engines at move {len(moves)} ({h0} vs {h1})")
+
+        seen_positions[h0] = seen_positions.get(h0, 0) + 1
+        if seen_positions[h0] >= 3:
+            winner = "draw"
+            break
+
         current ^= 1
     else:
         winner = "draw"
