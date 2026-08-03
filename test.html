@@ -2,15 +2,16 @@
 <html>
   <head>
     <title>Dorsetest</title>
-    <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="styles.css">
+    <script src="chess.js"></script>
   </head>
   <body>
     <!-- Main page -->
     <h2>Dorsetest Results</h2>
     <p id="meta"></p>
 
-    <div style="margin-top: 35px">
+    <div class="bar-section">
       <div class="bar-legend" id="bar-legend"></div>
       <div class="bar-container" id="bar"></div>
       <div class="bar-percent" id="bar-percent"></div>
@@ -20,13 +21,15 @@
 
     <h3 style="margin-top: 35px">Games</h3>
     <table>
-      <tr><th>No_</th><th>White</th><th>Black</th><th>Result</th><th>Moves</th><th></th></tr>
+      <thead>
+        <tr><th>No_</th><th>White</th><th>Black</th><th>Result</th><th>Moves</th><th></th></tr>
+      </thead>
       <tbody id="games-table"></tbody>
     </table>
 
-    <!-- DORSE_RESULTS_START -->
+<!-- DORSE_RESULTS_START -->
 <script>
-const results = {"timestamp": "2026-07-31-114903", "engines": {"v1": "v1", "v2": "v2"}, "movetime": 200, "summary": {"v1": 2, "v2": 0, "draw": 0}, "stats": {"v1": {"avgNps": 35418, "maxDepth": 5, "avgNodes": 7087}, "v2": {"avgNps": 28812, "maxDepth": 7, "avgNodes": 5660}}, "games": [{"result": "v1", "white": "v1", "black": "v2", "moves": 105, "moves_uci": "e1g1 c6d4 d2d3 h7h6 c3b5 d4b5 a4b5 c7c6 b5c4 b7b5 c4b3 c8b7 c1d2 f8e8 d1e2 b5b4 a1d1 d8c7 c2c3 c6c5 c3b4 c5b4 d2e3 f6g4 h2h3 g4e3 e2e3 d6c5 e3e2 a8d8 f1e1 d7d6 e2c2 a7a6 d3d4 e5d4 f3d4 d6d5 e4d5 e8e1 d1e1 b7d5 b3d5 d8d5 e1e8 c5f8 c2c7 d5d4 e8f8 g8f8 c7c5 f8g8 c5d4 a6a5 d4d8 g8h7 d8a5 f7f6 a5b4 h7g8 b4b8 g8h7 a2a3 g7g5 b8f8 h7g6 f8g8 g6f5 g8d5 f5g6 d5g8 g6f5 f2f3 f5f4 g8e6 f6f5 e6h6 f4e3 h3h4 e3d3 h4g5 d3d2 h6f6 d2c2 b2b4 c2b3 f6f5 b3a3 f5f7 a3b4 g1h1 b4c3 g5g6 c3c2 g6g7 c2c3 g7g8q c3d3 h1g1 d3e3 f7d7 e3f4 d7d6 f4f5 g2g4", "fen": "r1bq1rk1/pppp1ppp/2nb1n2/4p3/B3P3/2N2N2/PPPP1PPP/R1BQK2R w KQ - 0 6"}, {"result": "v1", "white": "v2", "black": "v1", "moves": 88, "moves_uci": "e1g1 c6d4 d2d3 c7c5 c3b5 d4b5 a4b5 a7a6 b5c4 d8b6 c4b3 h7h6 c1e3 f8d8 c2c4 d6c7 f1e1 d7d6 h2h3 c8e6 d1c2 a8c8 a1d1 e6d7 a2a3 d7c6 g2g3 g7g5 e3d2 g5g4 h3g4 f6g4 d2c3 f7f5 a3a4 f5f4 a4a5 b6a7 g3f4 e5f4 d3d4 a7b8 d4d5 c6d7 c2c1 d8f8 f3h4 g4e5 c3e5 d6e5 h4g6 d7g4 g6f8 c8f8 f2f3 g4f3 d1d3 f3g4 c1d2 b8d8 d2g2 h6h5 d3h3 f4f3 g2f2 g4h3 e1d1 d8g5 g1h2 g5g2 f2g2 h3g2 d5d6 c7a5 d1d5 f3f2 d5d1 a5e1 d6d7 f2f1q d1e1 f1e1 h2g2 f8f2 g2g3 e1e3 g3h4 f2h2", "fen": "r1bq1rk1/pppp1ppp/2nb1n2/4p3/B3P3/2N2N2/PPPP1PPP/R1BQK2R w KQ - 0 6"}]};
+const results = {"timestamp": "2026-08-03-132053", "engines": {"v1": "v1", "v2": "v2"}, "movetime": 300, "summary": {"v1": 3, "v2": 1, "draw": 0}, "stats": {"v1": {"avgNps": 20911, "avgMaxDepth": 7.0, "avgNodes": 6250, "avgQNodes": 5391}, "v2": {"avgNps": 20559, "avgMaxDepth": 6.5, "avgNodes": 6088, "avgQNodes": 5254}}, "games": [{"result": "v1", "white": "v1", "black": "v2", "moves": 155, "moves_uci": "d2d4 f6g4 c1g5 f7f6 a4b3 g8h8 d4e5 c6e5 f3e5 g4e5 g5e3 f8e8 f2f4 e5c6 e1g1 c6b4 f1e1 h7h6 a1c1 a7a6 h2h3 a8b8 a2a3 b4c6 d1d5 g7g5 g2g3 g5f4 g3f4 d8e7 c1d1 e8d8 d5f5 e7g7 f5g4 h6h5 g4g7 h8g7 c3d5 d8e8 e3f2 c6e7 d5e7 e8e7 f4f5 d6f4 f2a7 b8a8 a7d4 f4g3 e1e3 h5h4 c2c4 e7e8 b3a4 c7c6 d4b6 g7g8 a4c2 d7d6 b6c7 g3e5 e3b3 b7b5 c4b5 a6b5 b3b4 c8b7 a3a4 a8c8 c7d6 c8d8 c2b3 g8h8 d6e5 d8d1 b3d1 e8e5 b4d4 b5a4 d4d8 h8h7 d8d7 h7h8 d7b7 e5e4 b7d7 h8g8 d7d8 g8g7 d8d6 g7g8 d6e6 e4e6 f5e6 a4a3 b2a3 g8f8 d1f3 c6c5 f3d5 f6f5 g1g2 f8e8 g2f3 e8e7 a3a4 e7d6 f3f4 d6e7 f4f5 e7d6 a4a5 c5c4 d5c4 d6c5 e6e7 c5c4 f5g6 c4b5 g6f7 b5a5 e7e8q a5b4 e8e6 b4c3 e6e4 c3b3 e4h4 b3b2 h4h6 b2c2 h6f6 c2d2 f6e6 d2d3 h3h4 d3d4 h4h5 d4d3 h5h6 d3d4 h6h7 d4d3 h7h8q d3c2 e6a2 c2d3 a2e6 d3c2 e6c4 c2d2 h8h2 d2d1 h2e2", "fen": "r1bq1rk1/pppp1ppp/2nb1n2/4p3/B3P3/2N2N2/PPPP1PPP/R1BQK2R w KQ - 0 6"}, {"result": "v1", "white": "v2", "black": "v1", "moves": 78, "moves_uci": "e1g1 c6d4 d2d3 c7c5 c1e3 f8e8 f3d4 e5d4 c3b5 d6e5 e3g5 a7a6 f2f4 a6b5 f4e5 a8a4 e5f6 d7d5 h2h4 h7h6 b2b3 a4a3 g5c1 a3a5 f6g7 g8g7 d1h5 c8e6 h5h6 g7g8 f1f6 b5b4 c2c4 d5e4 h6g5 g8f8 d3e4 d4d3 g5g6 d8d4 g1h2 d4e5 c1f4 e5a1 f4d6 e8e7 d6e7 f8e7 f6e6 f7e6 g6h7 e7f8 a2a4 a1g7 h7g7 f8g7 h4h5 d3d2 h5h6 g7h6 h2h3 d2d1q h3h2 h6g7 g2g3 d1b3 e4e5 a5a4 h2h3 a4a2 h3h4 b3c4 h4h5 a2e2 g3g4 e2g2 g4g5 g2h2", "fen": "r1bq1rk1/pppp1ppp/2nb1n2/4p3/B3P3/2N2N2/PPPP1PPP/R1BQK2R w KQ - 0 6"}, {"result": "v1", "white": "v1", "black": "v2", "moves": 111, "moves_uci": "e1g1 e8g8 c1g5 h7h6 g5f6 g7f6 c3d5 d7d6 d1d2 h6h5 d2h6 c8g4 d5f6 d8f6 h6f6 c6d4 f3d4 c5d4 e2g4 h5g4 c2c3 d4b6 f6g5 g8h8 g5g4 a8d8 g4f5 c7c5 a1d1 h8g8 f1e1 f8e8 f5g5 g8h8 h2h3 e8e6 f2f3 c5c4 d3d4 e5d4 c3d4 d6d5 e4e5 b6a5 b2b4 a5b6 g5f5 h8g8 f5g5 g8h7 g5f5 h7g8 f5g5 g8h7 g5f5 h7g8 f5g5 g8h7 g5f5 h7g8 f5g5 g8f8 g5f5 f8g8 f5g5 g8f8 a2a3 c4c3 g5f5 f8g8 e1e3 d8e8 e3e1 c3c2 f5c2 e6e5 e1e5 e8e5 c2c8 g8g7 c8b7 e5e6 b7d5 e6e3 d5g5 g7f8 g5e3 f8g7 e3g5 g7h7 g5f6 h7g8 f6b6 a6a5 b4a5 g8g7 a5a6 g7g8 a6a7 g8g7 a7a8q f7f6 a8a7 g7g6 a7e7 g6h5 e7f7 h5h4 b6f6 h4g3 f6f4", "fen": "r1bqk2r/1ppp1ppp/p1n2n2/2b1p3/4P3/2NP1N2/PPP1BPPP/R1BQK2R w KQkq - 0 6"}, {"result": "v2", "white": "v2", "black": "v1", "moves": 81, "moves_uci": "e1g1 e8g8 c1g5 h7h6 g5f6 g7f6 c3d5 d7d6 d1d2 h6h5 d2h6 c8g4 d5f6 d8f6 h6f6 c6d4 f3d4 c5d4 e2g4 h5g4 c2c3 d4b6 f6g5 g8h8 g5g4 a8d8 g4f5 c7c5 a1d1 h8g8 f5f6 f8e8 f1e1 e8e6 f6f5 a6a5 f2f3 a5a4 h2h3 d6d5 e4d5 d8d5 c3c4 d5d4 e1e5 e6e5 f5e5 d4d8 e5g5 g8h7 g5f6 b6a5 f6f7 h7h8 b2b4 c5b4 f7h5 h8g8 h5a5 d8e8 a5d5 g8g7 d5b7 g7g8 b7b4 a4a3 b4a3 e8e2 a3a8 g8g7 a2a3 e2a2 a8e8 g7h7 d1e1 h7h6 e1e6 h6h7 e8f7 h7h8 e6e8", "fen": "r1bqk2r/1ppp1ppp/p1n2n2/2b1p3/4P3/2NP1N2/PPP1BPPP/R1BQK2R w KQkq - 0 6"}]};
 </script>
 <!-- DORSE_RESULTS_END -->
 
@@ -70,8 +73,9 @@ const results = {"timestamp": "2026-07-31-114903", "engines": {"v1": "v1", "v2":
     const statDefs = [
       { key: "wins", label: "Wins", format: v => v },
       { key: "avgNps", label: "Avg NPS", format: formatK },
-      { key: "maxDepth", label: "Max Depth Reached", format: v => v },
+      { key: "avgMaxDepth", label: "Avg Max Depth / Game", format: v => v.toFixed(1) },
       { key: "avgNodes", label: "Avg Nodes / Move", format: formatK },
+      { key: "avgQNodes", label: "Avg QNodes / Move", format: formatK },
     ];
 
     statCompare.innerHTML = `
@@ -113,12 +117,8 @@ const results = {"timestamp": "2026-07-31-114903", "engines": {"v1": "v1", "v2":
 
     const gamesTable = document.getElementById("games-table");
     results.games.forEach((g, i) => {
-      const fullPosition = g.moves_uci
-        ? `fen ${g.fen} moves ${g.moves_uci}`
-        : `fen ${g.fen}`;
-
       gamesTable.innerHTML += `<tr><td>${i + 1}</td><td>${g.white}</td><td>${g.black}</td><td>${g.result}</td><td>${g.moves}</td><td>
-        <svg class="copy-icon" data-copy="${fullPosition}" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="copy-icon" data-fen="${g.fen}" data-moves="${g.moves_uci}" data-white="${g.white}" data-black="${g.black}" data-result="${g.result}" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <g class="icon-copy">
             <rect x="9" y="9" width="13" height="13" rx="2"/>
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
@@ -128,11 +128,43 @@ const results = {"timestamp": "2026-07-31-114903", "engines": {"v1": "v1", "v2":
       </td></tr>`;
     });
 
+    // maps a game's result to PGN's expected result tag
+    function pgnResult(result, white) {
+      if (result === "draw") return "1/2-1/2";
+      return result === white ? "1-0" : "0-1";
+    }
+
+    // replays a game's UCI move list on a chess.js instance to build a PGN string
+    function buildPgn(fen, movesUci, white, black, result) {
+      const chess = new Chess(fen);
+
+      chess.header("White", white, "Black", black, "Result", pgnResult(result, white));
+
+      if (movesUci) {
+        for (const uci of movesUci.split(" ")) {
+          const from = uci.slice(0, 2);
+          const to = uci.slice(2, 4);
+          const promotion = uci.length > 4 ? uci.slice(4) : undefined;
+          chess.move({ from, to, promotion });
+        }
+      }
+
+      return chess.pgn();
+    }
+
     document.getElementById("games-table").addEventListener("click", (e) => {
       const icon = e.target.closest(".copy-icon");
       if (!icon) return;
 
-      navigator.clipboard.writeText(icon.dataset.copy).then(() => {
+      const pgn = buildPgn(
+        icon.dataset.fen,
+        icon.dataset.moves,
+        icon.dataset.white,
+        icon.dataset.black,
+        icon.dataset.result,
+      );
+
+      navigator.clipboard.writeText(pgn).then(() => {
         icon.classList.add("copied");
         setTimeout(() => icon.classList.remove("copied"), 1000);
       });
