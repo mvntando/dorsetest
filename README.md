@@ -16,6 +16,8 @@ Each engine dir (`engines/v1`, `engines/v2`) must be a proper Python package:
 - needs an `__init__.py` (can be empty)
 - internal sibling imports must be relative, e.g. `from .evaluate import piece_eval`
   (bare imports like `from evaluate import piece_eval` will break or collide across versions)
+- `search()` must snapshot the last completed iteration's PV into `self.pv_moves`
+  before returning (don't read `self.pv`/`self.pv_len` externally mutated mid-search, unsafe after return)
 
 ## Usage
 ```

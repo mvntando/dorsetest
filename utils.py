@@ -11,6 +11,8 @@ ROOK   = 4
 QUEEN  = 5
 KING   = 6
 
+PIECES = {PAWN: "P", KNIGHT: "N", BISHOP: "B", ROOK: "R", QUEEN: "Q", KING: "K"}
+
 # Initial chess board setup
 START_POS = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
@@ -55,3 +57,12 @@ def parse_fen(fen: str) -> tuple[list[list[int]], tuple[int, int], tuple[int, in
         rank = int(ep[1]) - 1  # rank 1 -> index 0
         ep = (rank, file)
     return board, wc, bc, ep, sd
+
+def move_alg(move):
+    # Long algebraic notation (e.g. "Ng8-f6", "e7-e6", "Nb1xc3")
+    uci_str = move.uci()
+    src_sq, dst_sq = uci_str[:2], uci_str[2:4]
+    piece = PIECES.get(move.piece, "")
+    letter = piece if piece != "P" else ""
+    sep = "x" if move.captured != EMPTY else "-"
+    return f"{letter}{src_sq}{sep}{dst_sq}"

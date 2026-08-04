@@ -39,8 +39,7 @@ def load_epd(path):
 
 
 def save_results(results):
-    # Save results as timestamped JSON and inject them into test.html
-    # between marker comments, so the page can be viewed without a server.
+    # Inject results as timestamped JSON into test.html between marker comments
     os.makedirs("results", exist_ok=True)
     timestamp = Timestamp
     with open(f"results/{timestamp}.json", "w") as f:
@@ -63,7 +62,7 @@ def save_results(results):
 Pos1, Searcher1 = load_engine(V1["path"])
 Pos2, Searcher2 = load_engine(V2["path"])
 
-def run_game(fen, movetime, swap):
+def run_game(fen, movetime, swap, verbose):
     # Play a single game between v1 and v2 from a given FEN, swapping sides
 
     engines = [Searcher2(), Searcher1()] if swap else [Searcher1(), Searcher2()]
@@ -80,13 +79,18 @@ def run_game(fen, movetime, swap):
     halfmove_clock = 0
 
     for _ in range(200):
+        # Run the current engine's search for a move
         engine = engines[current]
         start = time.perf_counter()
-        move = engine.search(pos[current], movetime=movetime / 1000.0, verbose = False)
+        move = engine.search(pos[current], movetime=movetime / 1000.0, verbose=verbose)
         elapsed = time.perf_counter() - start
 
+        pv_moves = engine.pv_moves
+        pv_str = " ".join(utils.move_alg(m) for m in pv_moves if m)
+        comment = f"({pv_str}) {engine.score / 100:.2f}/{engine.depth} {round(elapsed)}"
+
         move_stats.append({
-            "engine": names[current], "depth": engine.depth, "nodes": engine.nodes, "qnodes": engine.qnodes, "elapsed": elapsed,
+            "engine": names[current], "depth": engine.depth, "nodes": engine.nodes, "qnodes": engine.qnodes, "elapsed": elapsed, "comment": comment,
         })
 
         if move is None:
@@ -106,15 +110,7 @@ def run_game(fen, movetime, swap):
         for p in pos:
             p.make_uci_move(move_uci)
 
-        if move.piece == utils.PAWN or move.captured != utils.EMPTY:
-            halfmove_clock = 0
-        else:
-            halfmove_clock += 1
-
-        if halfmove_clock >= 100:  # 50 full moves with no pawn push/capture
-            winner = "draw"
-            break
-
+        # 3 fold repetition detection (check for hash mismatch between engines)
         h0, h1 = pos[0].hash, pos[1].hash
         if h0 != h1:
             print(f"warning: hash mismatch between engines at move {len(moves)} ({h0} vs {h1})")
@@ -124,13 +120,25 @@ def run_game(fen, movetime, swap):
             winner = "draw"
             break
 
+        # 50-move rule detection
+        if move.piece == utils.PAWN or move.captured != utils.EMPTY:
+            halfmove_clock = 0
+        else:
+            halfmove_clock += 1
+
+        if halfmove_clock >= 100:  # 50 full moves with no pawn push/capture
+            winner = "draw"
+            break
+
         current ^= 1
     else:
         winner = "draw"
 
+    move_meta = [m["comment"] for m in move_stats[:len(moves)]]
     game = {
-        "result": winner, "white": names[0], "black": names[1], "moves": len(moves), "moves_uci": " ".join(moves),
+        "result": winner, "white": names[0], "black": names[1], "moves": len(moves), "moves_uci": " ".join(moves), "move_meta": move_meta,
     }
+
     return game, move_stats
 
 
@@ -139,6 +147,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--positions", type=int, default=1)
     parser.add_argument("--movetime", type=int, default=5000)
+    parser.add_argument("--verbose", action="store_true")
     args = parser.parse_args()
 
     positions = load_epd("noob5.epd")
@@ -155,9 +164,10 @@ def main():
         "games": [],
     }
 
+    # Run games for the selected number of positions, swapping sides for each position
     for fen in positions[:args.positions]:
         for swap in (False, True):
-            game, move_stats = run_game(fen, movetime=args.movetime, swap=swap)
+            game, move_stats = run_game(fen, movetime=args.movetime, swap=swap, verbose=args.verbose)
             game["fen"] = fen
             results["games"].append(game)
 
